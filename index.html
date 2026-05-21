@@ -191,6 +191,8 @@
       background:none;
       border:none;
       cursor:pointer;
+      font-size:1.6rem;
+      color:var(--dark);
     }
 
     /* HERO */
@@ -300,12 +302,23 @@
       text-align:center;
       border:1px solid var(--border);
       box-shadow:var(--shadow-sm);
+      transition:0.3s;
+    }
+
+    .trust-card:hover{
+      transform:translateY(-5px);
+      box-shadow:var(--shadow-md);
     }
 
     .trust-card h3{
       font-size:2rem;
       color:var(--primary);
       margin-bottom:10px;
+    }
+
+    .trust-card p{
+      color:var(--muted);
+      font-weight:600;
     }
 
     /* HOW */
@@ -348,6 +361,10 @@
       font-size:1.4rem;
     }
 
+    .step p{
+      color:var(--muted);
+    }
+
     /* PACKAGES */
 
     .packages{
@@ -367,6 +384,8 @@
       background:var(--white);
       box-shadow:var(--shadow-sm);
       transition:0.3s;
+      display:flex;
+      flex-direction:column;
     }
 
     .package:hover{
@@ -394,6 +413,7 @@
     .package p{
       color:var(--muted);
       margin-bottom:25px;
+      flex:1;
     }
 
     .price{
@@ -489,6 +509,7 @@
       color:white;
       font-size:3rem;
       font-weight:900;
+      box-shadow:var(--shadow-lg);
     }
 
     /* FOOTER */
@@ -525,6 +546,7 @@
 
     footer ul a{
       color:#94a3b8;
+      transition:0.3s;
     }
 
     footer ul a:hover{
@@ -596,12 +618,20 @@
         text-align:center;
       }
 
+      .hero-buttons{
+        justify-content:center;
+      }
+
       .diaspora-box{
         padding:40px 25px;
       }
 
       .diaspora-box h2{
         font-size:2.2rem;
+      }
+
+      .diaspora-image{
+        min-height:250px;
       }
 
     }
@@ -946,7 +976,69 @@
 
 </section>
 
+<section>
 
+  <div class="container">
+
+    <div class="section-header">
+
+      <h2 class="section-title">
+        Explore Test Categories
+      </h2>
+
+      <p class="section-desc">
+        Browse diagnostic services tailored to your health needs.
+      </p>
+
+    </div>
+
+    <div class="category-grid">
+
+      <div class="category">
+        <h3>Women's Health</h3>
+        <p>Hormonal and reproductive wellness tests.</p>
+      </div>
+
+      <div class="category">
+        <h3>Men's Health</h3>
+        <p>Prostate and cardiovascular assessments.</p>
+      </div>
+
+      <div class="category">
+        <h3>Diabetes</h3>
+        <p>Blood sugar and metabolic monitoring.</p>
+      </div>
+
+      <div class="category">
+        <h3>Heart Health</h3>
+        <p>Cholesterol and cardiac risk evaluation.</p>
+      </div>
+
+      <div class="category">
+        <h3>Kidney Function</h3>
+        <p>Comprehensive renal diagnostic testing.</p>
+      </div>
+
+      <div class="category">
+        <h3>Liver Function</h3>
+        <p>Advanced liver wellness screening.</p>
+      </div>
+
+      <div class="category">
+        <h3>Infectious Disease</h3>
+        <p>Reliable STI and infection screening.</p>
+      </div>
+
+      <div class="category">
+        <h3>General Wellness</h3>
+        <p>Routine preventive health checks.</p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
 
 <section>
 
