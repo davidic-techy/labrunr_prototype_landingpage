@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lipid Profile | LabRunr</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================
+           1. DESIGN SYSTEM (Premium White-Dominant)
+        ========================================= */
+        :root {
+            --white: #ffffff;
+            --bg-body: #fbfdfc; 
+            --bg-surface: #ffffff;
+            --bg-light-mint: #eef7f5;
+            
+            --teal-primary: #1a6f61;
+            --teal-hover: #135248;
+            --mint-accent: #5bc2a8;
+            
+            --text-heading: #0f172a;
+            --text-body: #334155;
+            --text-muted: #64748b;
+            
+            --success: #059669;
+            --warning: #d97706;
+            --warning-bg: #fef3c7;
+            --danger: #ef4444;
+            --danger-bg: #fee2e2;
+            
+            --border-light: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.08);
+            --shadow-lg: 0 10px 25px -3px rgba(26, 111, 97, 0.1);
+            
+            --font-head: 'Fraunces', serif;
+            --font-body: 'Inter', sans-serif;
+            
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-full: 9999px;
+            
+            --container-max: 1200px;
+        }
+
+        /* =========================================
+           2. RESET & BASE
+        ========================================= */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-body); color: var(--text-body); background-color: var(--bg-body); line-height: 1.6; -webkit-font-smoothing: antialiased; padding-top: 80px; padding-bottom: 80px;}
+        a { text-decoration: none; color: inherit; transition: all 0.2s; }
+        ul { list-style: none; }
+        h1, h2, h3, h4 { font-family: var(--font-head); color: var(--text-heading); font-weight: 700; line-height: 1.2; }
+
+        .container { width: 100%; max-width: var(--container-max); margin: 0 auto; padding: 0 24px; }
+        @media (max-width: 640px) { .container { padding: 0 16px; } }
+
+        /* Navigation */
+        .nav-header { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-light); padding: 16px 0; }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-head); font-weight: 900; font-size: 1.5rem; color: var(--teal-primary); display: flex; align-items: center; gap: 10px; }
+        .logo svg { width: 28px; height: 28px; color: var(--mint-accent); }
+        .nav-links { display: flex; gap: 32px; align-items: center; font-weight: 500; }
+        .nav-links a.link-item:hover { color: var(--teal-primary); }
+        
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 28px; border-radius: var(--radius-full); font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.2s; border: none; }
+        .btn-primary { background: var(--teal-primary); color: var(--white); box-shadow: var(--shadow-sm); }
+        .btn-primary:hover { background: var(--teal-hover); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .btn-outline { background: transparent; border: 1px solid var(--border-light); color: var(--text-heading); }
+        .btn-outline:hover { border-color: var(--teal-primary); color: var(--teal-primary); }
+
+        @media (max-width: 860px) { .nav-links .hide-mobile { display: none; } }
+
+        /* =========================================
+           3. TOAST NOTIFICATIONS
+        ========================================= */
+        .toast { position: fixed; bottom: 100px; right: 24px; z-index: 1000; background: var(--bg-surface); border-left: 4px solid var(--success); box-shadow: var(--shadow-lg); padding: 16px 24px; border-radius: var(--radius-md); display: flex; align-items: center; gap: 12px; font-weight: 500; animation: slideUp 0.3s ease-out forwards; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* =========================================
+           4. PAGE LAYOUT
+        ========================================= */
+        .breadcrumb { padding: 24px 0; font-size: 0.875rem; color: var(--text-muted); font-weight: 500; }
+        .breadcrumb a { color: var(--teal-primary); }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { margin: 0 8px; color: var(--border-light); }
+
+        .layout-grid { display: grid; grid-template-columns: 1fr; gap: 48px; position: relative; }
+        @media (min-width: 960px) { .layout-grid { grid-template-columns: 1.2fr 1fr; gap: 64px; } }
+
+        /* Left Column: Test Details */
+        .test-header { margin-bottom: 32px; }
+        .cat-badge { display: inline-block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--teal-primary); font-weight: 700; background: var(--bg-light-mint); padding: 6px 12px; border-radius: var(--radius-sm); margin-bottom: 16px; }
+        .test-title { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 24px; }
+        
+        .meta-tags { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 32px; }
+        .meta-tag { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; color: var(--text-heading); font-weight: 600; background: var(--bg-surface); border: 1px solid var(--border-light); padding: 8px 16px; border-radius: var(--radius-full); }
+        .meta-tag svg { width: 18px; height: 18px; color: var(--teal-primary); }
+
+        .content-section { margin-bottom: 48px; }
+        .content-section h3 { font-size: 1.25rem; margin-bottom: 16px; font-family: var(--font-body); }
+        .content-section p { font-size: 1.05rem; color: var(--text-muted); line-height: 1.7; }
+
+        /* Fasting Warning Banner */
+        .warning-banner { background: var(--warning-bg); border-left: 4px solid var(--warning); padding: 16px 20px; border-radius: var(--radius-md); display: flex; gap: 16px; align-items: flex-start; margin-bottom: 32px; position: relative; }
+        .warning-banner svg { color: var(--warning); width: 24px; height: 24px; flex-shrink: 0; }
+        .warning-content h4 { color: var(--warning); margin-bottom: 4px; font-family: var(--font-body); font-size: 1rem; }
+        .warning-content p { font-size: 0.9rem; color: #92400e; margin: 0;}
+        .close-banner { position: absolute; top: 16px; right: 16px; background: transparent; border: none; color: var(--warning); cursor: pointer; opacity: 0.7; transition: 0.2s; }
+        .close-banner:hover { opacity: 1; }
+
+        /* Biomarkers Accordion */
+        .biomarkers-container { background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: var(--radius-md); overflow: hidden; }
+        .biomarker-summary { padding: 24px; display: flex; justify-content: space-between; align-items: center; }
+        .biomarker-summary p { margin: 0; font-weight: 500; color: var(--text-heading); }
+        .biomarker-summary span { color: var(--teal-primary); font-weight: 600; font-size: 1.25rem; }
+        
+        .biomarker-list { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0, 1, 0, 1); background: #f8fafc; border-top: 1px solid var(--border-light); }
+        .biomarker-list.expanded { max-height: 1000px; transition: max-height 0.5s ease-in-out; }
+        .biomarker-list ul { padding: 24px; display: grid; grid-template-columns: 1fr; gap: 12px; }
+        @media (min-width: 600px) { .biomarker-list ul { grid-template-columns: 1fr 1fr; } }
+        .biomarker-list li { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; color: var(--text-body); }
+        .biomarker-list li::before { content: ''; display: block; width: 6px; height: 6px; background: var(--teal-primary); border-radius: 50%; }
+
+        .toggle-btn { width: 100%; text-align: center; background: transparent; border: none; border-top: 1px solid var(--border-light); padding: 16px; font-weight: 600; color: var(--teal-primary); cursor: pointer; font-family: var(--font-body); font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+        .toggle-btn:hover { background: var(--bg-light-mint); }
+        .toggle-btn svg { width: 16px; height: 16px; transition: transform 0.3s; }
+        .toggle-btn.active svg { transform: rotate(180deg); }
+
+        /* Right Column: Sticky Lab Selector */
+        .booking-sidebar { position: relative; }
+        .sticky-card { background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 32px 24px; box-shadow: var(--shadow-sm); position: sticky; top: 120px; }
+        .sticky-card h3 { font-size: 1.25rem; margin-bottom: 8px; }
+        .sticky-card > p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px; }
+        
+        .lab-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;}
+        
+        /* Lab Row */
+        .lab-row { display: flex; justify-content: space-between; align-items: center; padding: 16px; border: 1px solid var(--border-light); border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
+        .lab-row:hover { border-color: var(--teal-primary); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .lab-row.selected { border-color: var(--teal-primary); background: var(--bg-light-mint); box-shadow: 0 0 0 1px var(--teal-primary); }
+        
+        .lab-info h4 { font-family: var(--font-body); font-size: 1rem; color: var(--text-heading); margin-bottom: 4px; }
+        .lab-meta { display: flex; align-items: center; gap: 12px; font-size: 0.8rem; color: var(--text-muted); }
+        .lab-meta span { display: flex; align-items: center; gap: 4px; }
+        .lab-meta svg { width: 14px; height: 14px; }
+        
+        .lab-price { text-align: right; }
+        .lab-price .price { font-family: var(--font-head); font-weight: 700; font-size: 1.15rem; color: var(--text-heading); display: block; }
+        .lab-price .tat { font-size: 0.75rem; color: var(--success); font-weight: 600; }
+
+        .total-row { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-top: 1px dashed var(--border-light); margin-top: 16px; margin-bottom: 24px; }
+        .total-row span { font-weight: 600; color: var(--text-muted); }
+        .total-row strong { font-family: var(--font-head); font-size: 1.5rem; color: var(--text-heading); }
+
+        /* Mobile Sticky CTA */
+        .mobile-sticky-cta { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-surface); padding: 16px 24px; border-top: 1px solid var(--border-light); box-shadow: 0 -4px 12px rgba(0,0,0,0.05); z-index: 90; align-items: center; justify-content: space-between; }
+        .mobile-sticky-cta .price-info { display: flex; flex-direction: column; }
+        .mobile-sticky-cta .label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+        .mobile-sticky-cta .amount { font-family: var(--font-head); font-weight: 700; font-size: 1.25rem; }
+        
+        @media (max-width: 959px) {
+            .booking-sidebar { display: none; } /* Hide right column on mobile entirely */
+            .mobile-sticky-cta { display: flex; }
+            body { padding-bottom: 120px; } /* Room for sticky CTA */
+            /* We will replicate the Lab list for mobile below the content */
+            .mobile-lab-list-container { display: block; margin-top: 48px; border-top: 1px solid var(--border-light); padding-top: 32px; }
+        }
+        @media (min-width: 960px) {
+            .mobile-lab-list-container { display: none; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="nav-header" id="navbar">
+        <div class="container nav-container">
+            <a href="/" class="logo">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4zm-7 18c0-4.42 3.58-8 8-8s8 3.58 8 8H5z"/></svg>
+                <span>LabRunr</span>
+            </a>
+            <nav class="nav-links">
+                <a href="/tests.html" class="link-item hide-mobile">Tests</a>
+                <a href="/packages.html" class="link-item hide-mobile">Packages</a>
+                <a href="/auth-login.html" class="link-item">Sign In</a>
+                
+                <a href="/book.html" class="btn-primary" id="navCartBtn" style="padding: 10px 20px; font-size: 0.95rem;">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                    <span id="cartCount">Cart (0)</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="breadcrumb" id="breadcrumb">
+            <a href="/">Home</a> <span>/</span> <a href="/tests.html">Tests</a> <span>/</span> <a href="/tests.html?cat=heart">Heart Health</a> <span>/</span> <span style="color: var(--text-heading);" id="bc-name">Lipid Profile</span>
+        </div>
+
+        <div class="layout-grid">
+            
+            <div class="test-info">
+                
+                <div class="warning-banner" id="fastingBanner">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                    <div class="warning-content">
+                        <h4>Preparation Required: Fasting</h4>
+                        <p>You must fast for <strong>9 to 12 hours</strong> before this test. Water is permitted, but do not consume food or other beverages. Our Runr will confirm fasting status upon arrival.</p>
+                    </div>
+                    <button class="close-banner" onclick="document.getElementById('fastingBanner').style.display='none'" aria-label="Dismiss">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+
+                <div class="test-header">
+                    <span class="cat-badge" id="catBadge">Heart Health</span>
+                    <h1 class="test-title" id="testName">Lipid Profile (Cholesterol Test)</h1>
+                    
+                    <div class="meta-tags">
+                        <div class="meta-tag">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                            <span id="sampleType">Blood Sample</span>
+                        </div>
+                        <div class="meta-tag">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <span id="tat">24 hrs Results</span>
+                        </div>
+                        <div class="meta-tag">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <span>MLSCN Accredited</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h3>What is this test?</h3>
+                    <p>A Lipid Profile is a blood test that measures the amount of cholesterol and triglycerides in your blood. Cholesterol is a waxy, fat-like substance essential for building healthy cells, but high levels can increase your risk of heart disease. This test helps determine your risk of the buildup of fatty deposits (plaques) in your arteries, which can lead to narrowed or blocked arteries throughout your body (atherosclerosis).</p>
+                </div>
+
+                <div class="content-section">
+                    <h3>What gets measured?</h3>
+                    <div class="biomarkers-container">
+                        <div class="biomarker-summary">
+                            <p>This test analyzes multiple vital markers in your blood.</p>
+                            <span>7 Biomarkers</span>
+                        </div>
+                        
+                        <div class="biomarker-list" id="biomarkerList">
+                            <ul>
+                                <li>Total Cholesterol</li>
+                                <li>High-Density Lipoprotein (HDL) - "Good"</li>
+                                <li>Low-Density Lipoprotein (LDL) - "Bad"</li>
+                                <li>Triglycerides</li>
+                                <li>Very Low-Density Lipoprotein (VLDL)</li>
+                                <li>Non-HDL Cholesterol</li>
+                                <li>Cholesterol / HDL Ratio</li>
+                            </ul>
+                        </div>
+                        
+                        <button class="toggle-btn" id="toggleBiomarkers" onclick="toggleBiomarkers()">
+                            <span id="toggleText">Show all biomarkers</span>
+                            <svg id="toggleIcon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mobile-lab-list-container">
+                    <h3 style="font-size: 1.25rem; margin-bottom: 8px; font-family: var(--font-head);">Select a Processing Lab</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px;">Prices vary by laboratory. Runr home collection fee is included.</p>
+                    <div class="lab-list" id="mobileLabList">
+                        </div>
+                </div>
+
+            </div>
+
+            <div class="booking-sidebar">
+                <div class="sticky-card">
+                    <h3>Select a Processing Lab</h3>
+                    <p>Prices vary by laboratory. Runr home collection fee (₦3,500) is already included in the displayed price.</p>
+                    
+                    <div class="lab-list" id="desktopLabList">
+                        </div>
+
+                    <div class="total-row">
+                        <span>Total Price</span>
+                        <strong id="desktopTotal">₦0</strong>
+                    </div>
+
+                    <button class="btn btn-primary" id="desktopBookBtn" style="width: 100%; justify-content: center; font-size: 1.1rem; padding: 16px;" onclick="handleBooking()" disabled>
+                        Select a lab to continue
+                    </button>
+                    <p style="text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 12px;">You will select your home collection time on the next step.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="mobile-sticky-cta">
+        <div class="price-info">
+            <span class="label">Total Price</span>
+            <span class="amount" id="mobileTotal">Select lab</span>
+        </div>
+        <button class="btn btn-primary" id="mobileBookBtn" onclick="handleBooking()" disabled>
+            Continue
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+        </button>
+    </div>
+
+    <script>
+        /* =========================================
+           1. DATA (Same as tests.html so it knows all tests)
+        ========================================= */
+        const testsData = [
+            { code: 'LBR-001', name: 'HbA1c (Glycated Haemoglobin)', category: 'diabetes', sampleType: 'Blood', fasting: false, price_min: 7500, price_max: 14000, tat: 24 },
+            { code: 'LBR-002', name: 'Full Blood Count (FBC)', category: 'wellness', sampleType: 'Blood', fasting: false, price_min: 5000, price_max: 9500, tat: 12 },
+            { code: 'LBR-003', name: 'Lipid Profile', category: 'heart', sampleType: 'Blood', fasting: true, price_min: 8000, price_max: 15000, tat: 24 },
+            { code: 'LBR-004', name: 'Comprehensive Metabolic Panel', category: 'wellness', sampleType: 'Blood', fasting: true, price_min: 12000, price_max: 22000, tat: 24 },
+            { code: 'LBR-009', name: 'Fasting Blood Sugar (FBS)', category: 'diabetes', sampleType: 'Blood', fasting: true, price_min: 3000, price_max: 6000, tat: 12 },
+            { code: 'LBR-010', name: 'Urinalysis', category: 'wellness', sampleType: 'Urine', fasting: false, price_min: 2500, price_max: 5000, tat: 12 }
+            // Add the rest of your tests here if needed for the prototype
+        ];
+
+        // 2. Mock Labs Data for the comparison table
+        const labsData = [
+            { id: 'lab-1', name: 'Clina-Lancet Laboratories', location: 'Victoria Island', distance: 2.1, tat: 24, recommended: true, multiplier: 1.0 },
+            { id: 'lab-2', name: 'Synlab Nigeria', location: 'Ikoyi', distance: 3.5, tat: 24, recommended: false, multiplier: 0.95 },
+            { id: 'lab-3', name: 'V-Care Diagnostics', location: 'Lekki Phase 1', distance: 4.2, tat: 24, recommended: false, multiplier: 0.8 },
+            { id: 'lab-4', name: 'MeCure Healthcare', location: 'Oshodi', distance: 12.8, tat: 48, recommended: false, multiplier: 0.6 }
+        ];
+
+        /* =========================================
+           STATE MANAGEMENT
+        ========================================= */
+        let currentTest = null;
+        let selectedLabId = null;
+        let selectedPrice = 0;
+
+        window.STATE = {
+            cart: JSON.parse(localStorage.getItem('labrunr_cart') || '[]'),
+            saveCart() { localStorage.setItem('labrunr_cart', JSON.stringify(this.cart)); },
+            addToCart(testObj, labId) { 
+                this.cart = this.cart.filter(item => item.code !== testObj.code);
+                const cartItem = { ...testObj, selectedLab: labId, finalPrice: selectedPrice };
+                this.cart.push(cartItem); 
+                this.saveCart(); 
+                this.updateCartUI(); 
+            },
+            updateCartUI() {
+                const badge = document.getElementById('cartCount');
+                if (badge) badge.textContent = `Cart (${this.cart.length})`;
+            }
+        };
+
+        window.UTILS = {
+            toast(message, type = 'success') {
+                const t = document.createElement('div');
+                t.className = `toast`;
+                t.innerHTML = `<svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> <span>${message}</span>`;
+                document.body.appendChild(t);
+                setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
+            }
+        };
+
+        const formatNaira = (num) => '₦' + num.toLocaleString('en-NG');
+
+        /* =========================================
+           DYNAMIC PAGE INITIALIZATION
+        ========================================= */
+        function initPage() {
+            STATE.updateCartUI();
+
+            // 1. Read URL to find out which test was clicked
+            const urlParams = new URLSearchParams(window.location.search);
+            const testId = urlParams.get('id');
+
+            // 2. Find the test in our database (fallback to Lipid Profile if no ID)
+            currentTest = testsData.find(t => t.code === testId) || testsData.find(t => t.code === 'LBR-003');
+
+            // 3. Dynamically update the HTML text on the page
+            document.getElementById('testName').textContent = currentTest.name;
+            document.getElementById('bc-name').textContent = currentTest.name;
+            document.getElementById('catBadge').textContent = currentTest.category.toUpperCase();
+            document.getElementById('sampleType').textContent = currentTest.sampleType + ' Sample';
+            document.getElementById('tat').textContent = currentTest.tat + ' hrs Results';
+
+            // 4. Handle Fasting Banner
+            if(!currentTest.fasting) {
+                document.getElementById('fastingBanner').style.display = 'none';
+            } else {
+                document.getElementById('fastingBanner').style.display = 'flex';
+            }
+
+            // 5. Render Labs with dynamic prices based on the specific test's price range
+            renderLabs(currentTest.price_max);
+        }
+
+        // Render Labs in both desktop sidebar and mobile inline container
+        function renderLabs(basePrice) {
+            const desktopContainer = document.getElementById('desktopLabList');
+            const mobileContainer = document.getElementById('mobileLabList');
+            let html = '';
+
+            labsData.forEach(lab => {
+                // Calculate fake dynamic price for prototype
+                const labPrice = Math.round((basePrice * lab.multiplier) / 500) * 500; 
+                
+                const recBadge = lab.recommended ? `<span style="background: var(--bg-light-mint); color: var(--teal-primary); padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Nearest</span>` : '';
+                
+                html += `
+                    <div class="lab-row" id="lab-${lab.id}" onclick="selectLab('${lab.id}', ${labPrice})">
+                        <div class="lab-info">
+                            <h4>${lab.name} ${recBadge}</h4>
+                            <div class="lab-meta">
+                                <span><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg> ${lab.location} (${lab.distance}km)</span>
+                            </div>
+                        </div>
+                        <div class="lab-price">
+                            <span class="price">${formatNaira(labPrice)}</span>
+                            <span class="tat">${lab.tat}h Results</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            desktopContainer.innerHTML = html;
+            mobileContainer.innerHTML = html;
+        }
+
+        // Handle Lab Selection
+        function selectLab(id, price) {
+            selectedLabId = id;
+            selectedPrice = price;
+
+            document.querySelectorAll('.lab-row').forEach(el => el.classList.remove('selected'));
+            document.querySelectorAll(`#lab-${id}`).forEach(el => el.classList.add('selected'));
+
+            document.getElementById('desktopTotal').textContent = formatNaira(price);
+            document.getElementById('mobileTotal').textContent = formatNaira(price);
+
+            document.getElementById('desktopBookBtn').disabled = false;
+            document.getElementById('desktopBookBtn').innerHTML = 'Add to Cart & Continue';
+            document.getElementById('mobileBookBtn').disabled = false;
+        }
+
+        // Expand/Collapse Biomarkers
+        function toggleBiomarkers() {
+            const list = document.getElementById('biomarkerList');
+            const btn = document.getElementById('toggleBiomarkers');
+            const text = document.getElementById('toggleText');
+
+            list.classList.toggle('expanded');
+            btn.classList.toggle('active');
+
+            if(list.classList.contains('expanded')) {
+                text.textContent = 'Hide biomarkers';
+            } else {
+                text.textContent = 'Show all biomarkers';
+            }
+        }
+
+        // Add to Cart and Redirect
+        function handleBooking() {
+            if(!selectedLabId) return;
+            STATE.addToCart(currentTest, selectedLabId);
+            UTILS.toast("Test added to cart. Redirecting...");
+            setTimeout(() => { window.location.href = '/book.html'; }, 800);
+        }
+
+        // Run Initialization
+        document.addEventListener('DOMContentLoaded', initPage);
+
+    </script>
+</body>
+</html>

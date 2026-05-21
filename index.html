@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LabRunr | Your health, at your door.</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================
+           1. DESIGN SYSTEM (Premium White-Dominant)
+        ========================================= */
+        :root {
+            /* Colors */
+            --white: #ffffff;
+            --bg-body: #fbfdfc; /* Very subtle off-white for depth */
+            --bg-surface: #ffffff;
+            --bg-light-mint: #eef7f5;
+            
+            /* AYSH Care / LabRunr Brand */
+            --teal-primary: #1a6f61;
+            --teal-hover: #135248;
+            --mint-accent: #5bc2a8;
+            
+            /* Text */
+            --text-heading: #0f172a;
+            --text-body: #334155;
+            --text-muted: #64748b;
+            
+            /* Semantic */
+            --success: #059669;
+            --success-bg: #d1fae5;
+            --warning: #d97706;
+            --warning-bg: #fef3c7;
+            
+            /* Structural */
+            --border-light: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -1px rgba(15, 23, 42, 0.04);
+            --shadow-lg: 0 10px 25px -3px rgba(26, 111, 97, 0.1), 0 4px 6px -2px rgba(26, 111, 97, 0.05);
+            
+            /* Typography */
+            --font-head: 'Fraunces', serif;
+            --font-body: 'Inter', sans-serif;
+            
+            /* Spacing & Radii */
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-full: 9999px;
+            
+            --container-max: 1280px;
+        }
+
+        /* =========================================
+           2. RESET & BASE
+        ========================================= */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { 
+            font-family: var(--font-body); 
+            color: var(--text-body); 
+            background-color: var(--bg-body); 
+            line-height: 1.6; 
+            -webkit-font-smoothing: antialiased;
+        }
+        a { text-decoration: none; color: inherit; transition: color 0.2s; }
+        ul { list-style: none; }
+        img, svg { max-width: 100%; display: block; }
+
+        /* Typography Defaults */
+        h1, h2, h3, h4 { font-family: var(--font-head); color: var(--text-heading); font-weight: 700; line-height: 1.2; }
+        .text-brand { color: var(--teal-primary); }
+        .text-accent { color: var(--mint-accent); }
+        
+        .section-header { text-align: center; max-width: 600px; margin: 0 auto 48px; padding: 0 20px; }
+        .section-title { font-size: clamp(2rem, 4vw, 2.75rem); margin-bottom: 16px; font-weight: 900;}
+        .section-desc { font-size: 1.125rem; color: var(--text-muted); }
+
+        /* =========================================
+           3. LAYOUT & COMPONENTS
+        ========================================= */
+        .container { width: 100%; max-width: var(--container-max); margin: 0 auto; padding: 0 24px; }
+        @media (max-width: 640px) { .container { padding: 0 16px; } }
+        
+        section { padding: 96px 0; }
+        @media (max-width: 768px) { section { padding: 64px 0; } }
+
+        /* Buttons */
+        .btn { 
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 14px 28px; border-radius: var(--radius-full); 
+            font-weight: 600; font-size: 1rem; cursor: pointer; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 2px solid transparent; 
+        }
+        .btn-primary { background: var(--teal-primary); color: var(--white); box-shadow: var(--shadow-sm); }
+        .btn-primary:hover { background: var(--teal-hover); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .btn-outline { background: transparent; border-color: var(--border-light); color: var(--text-heading); }
+        .btn-outline:hover { border-color: var(--teal-primary); color: var(--teal-primary); }
+
+        /* Animations */
+        .reveal { opacity: 0; transform: translateY(20px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* =========================================
+           4. PAGE SECTIONS
+        ========================================= */
+        
+        /* Navigation */
+        .nav-header { 
+            position: fixed; top: 0; width: 100%; z-index: 100; 
+            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid transparent; transition: all 0.3s; padding: 16px 0; 
+        }
+        .nav-header.scrolled { border-bottom-color: var(--border-light); box-shadow: var(--shadow-sm); }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-head); font-weight: 900; font-size: 1.5rem; color: var(--teal-primary); display: flex; align-items: center; gap: 10px; }
+        .logo svg { width: 28px; height: 28px; color: var(--mint-accent); }
+        
+        .nav-links { display: flex; gap: 32px; align-items: center; font-weight: 500; }
+        .nav-links a.link-item { color: var(--text-body); transition: color 0.2s; }
+        .nav-links a.link-item:hover { color: var(--teal-primary); }
+        @media (max-width: 860px) { 
+            .nav-links .hide-mobile { display: none; } 
+            .nav-links { gap: 16px; }
+        }
+
+        /* Hero Section */
+        .hero { 
+            padding: 160px 0 80px; position: relative; overflow: hidden; 
+            background: linear-gradient(180deg, var(--bg-light-mint) 0%, var(--bg-body) 100%);
+        }
+        .hero-content { max-width: 840px; margin: 0 auto; text-align: center; position: relative; z-index: 2; }
+        .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); margin-bottom: 24px; letter-spacing: -0.02em; }
+        .hero p { font-size: clamp(1.125rem, 2vw, 1.25rem); color: var(--text-muted); margin-bottom: 48px; max-width: 600px; margin-inline: auto; }
+
+        /* Advanced Zone Checker */
+        .zone-checker-wrapper { max-width: 600px; margin: 0 auto; position: relative; }
+        .zone-form { 
+            display: flex; background: var(--bg-surface); padding: 8px; 
+            border-radius: var(--radius-full); box-shadow: var(--shadow-lg); 
+            border: 1px solid var(--border-light); transition: all 0.3s;
+        }
+        .zone-form:focus-within { border-color: var(--teal-primary); box-shadow: 0 0 0 4px rgba(26, 111, 97, 0.1); }
+        .zone-form .input-group { flex: 1; display: flex; align-items: center; padding: 0 16px; }
+        .zone-form svg { width: 20px; height: 20px; color: var(--text-muted); margin-right: 12px; flex-shrink: 0; }
+        .zone-form input { flex: 1; border: none; outline: none; font-size: 1.05rem; color: var(--text-heading); background: transparent; width: 100%;}
+        .zone-form input::placeholder { color: #94a3b8; }
+        .zone-form button { flex-shrink: 0; }
+        @media (max-width: 500px) {
+            .zone-form { flex-direction: column; border-radius: var(--radius-md); padding: 12px; gap: 12px; }
+            .zone-form .input-group { padding: 8px 4px; }
+            .zone-form button { width: 100%; border-radius: var(--radius-sm); }
+        }
+
+        /* Status Dropdowns */
+        .zone-status { 
+            display: none; margin-top: 16px; padding: 20px; border-radius: var(--radius-md); 
+            text-align: left; animation: slideDown 0.3s ease-out forwards;
+        }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .status-covered { background: var(--success-bg); border: 1px solid #34d399; }
+        .status-uncovered { background: var(--warning-bg); border: 1px solid #fbbf24; }
+        
+        .status-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+        .status-header h4 { font-family: var(--font-body); font-size: 1.1rem; }
+        .status-covered h4 { color: var(--success); }
+        .status-uncovered h4 { color: var(--warning); }
+        
+        .waitlist-inline { display: flex; gap: 8px; margin-top: 16px; }
+        .waitlist-inline input { flex: 1; padding: 12px 16px; border: 1px solid #fcd34d; border-radius: var(--radius-sm); outline: none; }
+        @media (max-width: 480px) { .waitlist-inline { flex-direction: column; } }
+
+        /* Trust Bar */
+        .trust-bar { padding: 48px 0; border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light); background: var(--bg-surface); }
+        .trust-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; text-align: center; }
+        @media (min-width: 768px) { .trust-grid { grid-template-columns: repeat(4, 1fr); gap: 24px; } }
+        .trust-item { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        .trust-item svg { width: 32px; height: 32px; color: var(--mint-accent); }
+        .trust-item h3 { font-family: var(--font-body); font-size: 1.25rem; color: var(--text-heading); }
+        .trust-item p { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
+
+        /* How It Works */
+        .steps-grid { display: grid; grid-template-columns: 1fr; gap: 32px; position: relative; }
+        @media (min-width: 768px) { .steps-grid { grid-template-columns: repeat(4, 1fr); gap: 24px; } }
+        .step-card { background: var(--bg-surface); padding: 32px 24px; border-radius: var(--radius-lg); border: 1px solid var(--border-light); text-align: center; transition: transform 0.3s, box-shadow 0.3s; }
+        .step-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); border-color: var(--bg-light-mint); }
+        .step-icon-wrapper { width: 64px; height: 64px; background: var(--bg-light-mint); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: var(--teal-primary); }
+        .step-icon-wrapper svg { width: 32px; height: 32px; }
+        .step-card h3 { font-size: 1.25rem; margin-bottom: 12px; }
+        .step-card p { color: var(--text-muted); font-size: 0.95rem; }
+
+        /* Packages (Advanced Horizontal Scroll) */
+        .packages-section { background: var(--bg-surface); }
+        .packages-wrapper { 
+            display: flex; overflow-x: auto; scroll-snap-type: x mandatory; 
+            gap: 24px; padding: 10px 4px 40px; scrollbar-width: none; 
+        }
+        .packages-wrapper::-webkit-scrollbar { display: none; }
+        @media (min-width: 1024px) { 
+            .packages-wrapper { grid-template-columns: repeat(4, 1fr); display: grid; overflow-x: visible; padding-bottom: 10px; } 
+        }
+        .package-card { 
+            min-width: 300px; scroll-snap-align: center;
+            background: var(--bg-surface); border: 1px solid var(--border-light); 
+            border-radius: var(--radius-lg); padding: 32px 24px; 
+            display: flex; flex-direction: column; box-shadow: var(--shadow-sm); transition: all 0.3s;
+        }
+        .package-card:hover { border-color: var(--teal-primary); box-shadow: var(--shadow-lg); }
+        .save-badge { background: var(--bg-light-mint); color: var(--teal-primary); padding: 6px 12px; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 700; align-self: flex-start; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.05em;}
+        .package-card h3 { font-size: 1.35rem; margin-bottom: 12px; }
+        .package-desc { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 24px; flex-grow: 1; }
+        .package-price { font-size: 1.75rem; font-weight: 900; color: var(--text-heading); font-family: var(--font-head); margin-bottom: 24px; display: flex; align-items: baseline; gap: 8px;}
+        .package-price span { font-size: 1rem; color: var(--text-muted); font-weight: 500; font-family: var(--font-body); text-decoration: line-through;}
+
+        /* Category Grid */
+        .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
+        @media (min-width: 768px) { .category-grid { grid-template-columns: repeat(4, 1fr); gap: 24px; } }
+        .cat-tile { 
+            background: var(--bg-surface); border: 1px solid var(--border-light); 
+            border-radius: var(--radius-md); padding: 24px 16px; text-align: center; 
+            transition: all 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            min-height: 140px; box-shadow: var(--shadow-sm);
+        }
+        .cat-tile:hover { transform: translateY(-4px); border-color: var(--mint-accent); box-shadow: var(--shadow-md); }
+        .cat-icon { width: 32px; height: 32px; color: var(--teal-primary); margin-bottom: 12px; }
+        .cat-tile span { font-weight: 600; color: var(--text-heading); font-size: 1rem; line-height: 1.3;}
+        .cat-tile small { color: var(--text-muted); font-size: 0.85rem; margin-top: 8px; font-weight: 500;}
+
+        /* Diaspora Module */
+        .diaspora { 
+            background: var(--bg-light-mint); border-radius: var(--radius-lg); 
+            padding: 48px 24px; display: grid; grid-template-columns: 1fr; gap: 48px; align-items: center; overflow: hidden; position: relative;
+        }
+        @media (min-width: 900px) { .diaspora { grid-template-columns: 1fr 1fr; padding: 64px; } }
+        .diaspora-content { position: relative; z-index: 2; }
+        .diaspora-img { 
+            width: 100%; height: 100%; min-height: 300px; 
+            background: var(--teal-primary); border-radius: var(--radius-md); 
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,100 C30,80 70,120 100,60 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center;
+        }
+        .diaspora-img svg { width: 64px; height: 64px; color: var(--mint-accent); opacity: 0.8;}
+        .use-cases li { position: relative; padding-left: 32px; margin-bottom: 16px; font-weight: 500; color: var(--text-body);}
+        .use-cases li svg { position: absolute; left: 0; top: 2px; width: 20px; height: 20px; color: var(--teal-primary); }
+
+        /* Footer */
+        .footer { background: #07221d; color: var(--white); padding: 80px 0 32px; }
+        .footer-grid { display: grid; grid-template-columns: 1fr; gap: 48px; margin-bottom: 64px; }
+        @media (min-width: 768px) { .footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr; } }
+        .footer-brand .logo { color: var(--white); margin-bottom: 16px; }
+        .footer-brand p { color: #94a3b8; font-size: 0.95rem; max-width: 300px; margin-bottom: 24px; }
+        
+        .footer h4 { font-family: var(--font-body); font-size: 1.1rem; margin-bottom: 20px; color: var(--white); font-weight: 600;}
+        .footer ul li { margin-bottom: 12px; }
+        .footer ul li a { color: #94a3b8; transition: color 0.2s; font-size: 0.95rem; }
+        .footer ul li a:hover { color: var(--mint-accent); }
+        
+        .mlscn-badge { 
+            display: inline-flex; align-items: center; gap: 12px; 
+            background: rgba(255,255,255,0.05); padding: 12px 16px; 
+            border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.1); 
+        }
+        .mlscn-badge svg { color: var(--mint-accent); width: 24px; height: 24px; }
+        
+        .footer-bottom { 
+            border-top: 1px solid rgba(255,255,255,0.1); padding-top: 32px; 
+            color: #64748b; font-size: 0.875rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="nav-header" id="navbar">
+        <div class="container nav-container">
+            <a href="/" class="logo">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4zm-7 18c0-4.42 3.58-8 8-8s8 3.58 8 8H5z"/></svg>
+                <span>LabRunr</span>
+            </a>
+            <nav class="nav-links">
+                <a href="#how-it-works" class="link-item hide-mobile">How it works</a>
+                <a href="/tests.html" class="link-item hide-mobile">Tests</a>
+                <a href="/for-doctors.html" class="link-item hide-mobile">For Doctors</a>
+                <a href="/auth-login.html" class="link-item" style="font-weight: 600;">Sign In</a>
+                <a href="/auth-register.html" class="btn btn-primary">Book a test</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container hero-content">
+            <h1 class="reveal">Your health, at your <span class="text-brand">door.</span></h1>
+            <p class="reveal">Bringing diagnostic care to Lagos. A trained Runr collects your sample at home. Results on your phone in 24 hours.</p>
+            
+            <div class="zone-checker-wrapper reveal">
+                <form id="zoneForm" class="zone-form" onsubmit="handleZoneCheck(event)">
+                    <div class="input-group">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                        <input type="text" id="zoneInput" placeholder="Enter your Lagos area (e.g., Lekki, Surulere)" required autocomplete="off">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Check Coverage</button>
+                </form>
+
+                <div id="zoneCovered" class="zone-status status-covered">
+                    <div class="status-header">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <h4>You are covered!</h4>
+                    </div>
+                    <p style="color: var(--text-body); font-size: 0.95rem; margin-bottom: 16px;">We have Runrs available in your area today for home collection.</p>
+                    <a href="/tests.html" class="btn" style="background: var(--success); color: white;">Explore Tests</a>
+                </div>
+
+                <div id="zoneNotCovered" class="zone-status status-uncovered">
+                    <div class="status-header">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <h4>Not in your area yet.</h4>
+                    </div>
+                    <p style="color: var(--text-body); font-size: 0.95rem;">Join the waitlist and we'll notify you the moment we expand to your neighborhood.</p>
+                    <form class="waitlist-inline" onsubmit="event.preventDefault(); alert('Added to waitlist!');">
+                        <input type="email" placeholder="Your email address" required>
+                        <button type="submit" class="btn" style="background: var(--warning); color: white; border: none;">Notify Me</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="trust-bar reveal">
+        <div class="container trust-grid">
+            <div class="trust-item">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <div>
+                    <h3>10 Mins</h3>
+                    <p>Sample Collection</p>
+                </div>
+            </div>
+            <div class="trust-item">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" /></svg>
+                <div>
+                    <h3>24 Hrs</h3>
+                    <p>Digital Results</p>
+                </div>
+            </div>
+            <div class="trust-item">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <div>
+                    <h3>MLSCN</h3>
+                    <p>Accredited Labs Only</p>
+                </div>
+            </div>
+            <div class="trust-item">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+                <div>
+                    <h3>100%</h3>
+                    <p>Data Privacy</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="container">
+        <div class="section-header reveal">
+            <h2 class="section-title">Diagnostic care, simplified.</h2>
+            <p class="section-desc">From booking to results, we've designed a completely frictionless experience centered around your convenience.</p>
+        </div>
+        <div class="steps-grid">
+            <div class="step-card reveal">
+                <div class="step-icon-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </div>
+                <h3>1. Book Online</h3>
+                <p>Choose your tests or package and select an accredited lab partner near you.</p>
+            </div>
+            <div class="step-card reveal" style="transition-delay: 100ms;">
+                <div class="step-icon-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                </div>
+                <h3>2. Runr Arrives</h3>
+                <p>A certified LabRunr phlebotomist arrives at your home at your chosen time.</p>
+            </div>
+            <div class="step-card reveal" style="transition-delay: 200ms;">
+                <div class="step-icon-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                </div>
+                <h3>3. Lab Processes</h3>
+                <p>Your sample is securely transported to your chosen lab for processing.</p>
+            </div>
+            <div class="step-card reveal" style="transition-delay: 300ms;">
+                <div class="step-icon-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                </div>
+                <h3>4. Results on Phone</h3>
+                <p>Receive your results digitally with plain-English summaries from our CMO.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="packages-section reveal">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Comprehensive Health Packages</h2>
+                <p class="section-desc">Bundled testing designed for preventative care and chronic management, saving you money compared to individual tests.</p>
+            </div>
+            
+            <div class="packages-wrapper">
+                <div class="package-card">
+                    <span class="save-badge">Save ₦22,500</span>
+                    <h3>Annual Wellness Panel</h3>
+                    <p class="package-desc">Comprehensive full-body checkup including 8 essential tests (FBC, Lipids, Glucose, Liver & Kidney function).</p>
+                    <div class="package-price">₦45,000 <span>₦67,500</span></div>
+                    <a href="/package-detail.html" class="btn btn-outline" style="width: 100%;">View Details</a>
+                </div>
+                
+                <div class="package-card">
+                    <span class="save-badge">Save ₦12,000</span>
+                    <h3>Women's Health</h3>
+                    <p class="package-desc">Hormone panel, thyroid function, and vital metabolic markers tailored for women.</p>
+                    <div class="package-price">₦38,000 <span>₦50,000</span></div>
+                    <a href="/package-detail.html" class="btn btn-outline" style="width: 100%;">View Details</a>
+                </div>
+                
+                <div class="package-card">
+                    <span class="save-badge">Save ₦8,500</span>
+                    <h3>Diabetes Management</h3>
+                    <p class="package-desc">Essential monitoring including HbA1c, Fasting Blood Sugar, and Kidney Function analysis.</p>
+                    <div class="package-price">₦24,000 <span>₦32,500</span></div>
+                    <a href="/package-detail.html" class="btn btn-outline" style="width: 100%;">View Details</a>
+                </div>
+                
+                <div class="package-card">
+                    <span class="save-badge">Save ₦15,000</span>
+                    <h3>Executive Men's</h3>
+                    <p class="package-desc">Advanced cardiovascular risk assessment, prostate screening (PSA), and metabolic analysis.</p>
+                    <div class="package-price">₦65,000 <span>₦80,000</span></div>
+                    <a href="/package-detail.html" class="btn btn-outline" style="width: 100%;">View Details</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container reveal">
+        <div class="section-header">
+            <h2 class="section-title">Explore by Category</h2>
+            <p class="section-desc">Search over 150 individual diagnostic tests available for home collection.</p>
+        </div>
+        
+        <div class="category-grid">
+            <a href="/tests.html" class="cat-tile">
+                <svg class="cat-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                <span>Wellness & Prevention</span><small>15 Tests</small>
+            </a>
+            <a href="/tests.html" class="cat-tile">
+                <svg class="cat-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                <span>Diabetes & Metabolic</span><small>8 Tests</small>
+            </a>
+            <a href="/tests.html" class="cat-tile">
+                <svg class="cat-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                <span>Heart Health</span><small>12 Tests</small>
+            </a>
+            <a href="/tests.html" class="cat-tile">
+                <svg class="cat-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                <span>Women's Health</span><small>24 Tests</small>
+            </a>
+            <a href="/tests.html" class="cat-tile">
+                <svg class="cat-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                <span>Men's Health</span><small>18 Tests</small>
+            </a>
+            <a href="/tests.html" class="cat-tile">
+                <svg class="cat-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                <span>Kidney & Liver</span><small>10 Tests</small>
+            </a>
+            <a href="/tests.html" class="cat-tile">
+                <svg class="cat-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                <span>Infectious Disease</span><small>22 Tests</small>
+            </a>
+            <a href="/tests.html" class="cat-tile">
+                <svg class="cat-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                <span>View All 150+ Tests</span><small>Browse Catalogue</small>
+            </a>
+        </div>
+    </section>
+
+    <section class="container reveal">
+        <div class="diaspora">
+            <div class="diaspora-content">
+                <h2 style="font-size: 2.25rem; margin-bottom: 16px; font-family: var(--font-head); font-weight: 900; color: var(--text-heading);">Sending health home.</h2>
+                <p style="color: var(--text-muted); margin-bottom: 32px; font-size: 1.1rem; line-height: 1.7;">Gift a test to your family in Lagos from anywhere in the world. Manage their health records securely from your own dashboard.</p>
+                
+                <ul class="use-cases">
+                    <li>
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                        Book tests for elderly parents without them leaving home.
+                    </li>
+                    <li>
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                        Pay internationally via secure integration.
+                    </li>
+                    <li>
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                        Receive their digital results directly to your phone.
+                    </li>
+                </ul>
+                <a href="/auth-register.html" class="btn btn-primary" style="margin-top: 24px;">Gift a Test Today</a>
+            </div>
+            
+            <div class="diaspora-img">
+               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="/" class="logo">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4zm-7 18c0-4.42 3.58-8 8-8s8 3.58 8 8H5z"/></svg>
+                        <span>LabRunr</span>
+                    </a>
+                    <p>Your health, at your door. Building the diagnostic infrastructure of Africa.</p>
+                    <div class="mlscn-badge">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                        <div style="font-size: 0.85rem;">
+                            <strong style="color: white; display: block; margin-bottom: 2px;">MLSCN Accredited</strong>
+                            <span style="color: #94a3b8;">We partner only with verified labs.</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h4>Patients</h4>
+                    <ul>
+                        <li><a href="/tests.html">Test Catalogue</a></li>
+                        <li><a href="/packages.html">Health Packages</a></li>
+                        <li><a href="/#how-it-works">How it Works</a></li>
+                        <li><a href="/auth-register.html">Sign Up</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Partners</h4>
+                    <ul>
+                        <li><a href="/for-doctors.html">For Doctors</a></li>
+                        <li><a href="/for-labs.html">For Labs</a></li>
+                        <li><a href="/corporate.html">Corporate Wellness</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="/about.html">About Us</a></li>
+                        <li><a href="/contact.html">Contact Support</a></li>
+                        <li><a href="/privacy.html">Privacy Policy</a></li>
+                        <li><a href="/terms.html">Terms of Service</a></li>
+                        <li><a href="/coverage.html">Coverage Areas</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>&copy; 2026 LabRunr (Ennovatio54).</span>
+                <span>Built with precision in Lagos, Nigeria.</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        /* =========================================
+           UI Interactions & State Simulation
+        ========================================= */
+
+        // 1. Sticky Nav / Glassmorphism state
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // 2. Scroll Reveal Animation (Intersection Observer)
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // 3. Zone Checker Logic
+        function handleZoneCheck(e) {
+            e.preventDefault();
+            const inputField = document.getElementById('zoneInput');
+            const inputValue = inputField.value.toLowerCase().trim();
+            const coveredResult = document.getElementById('zoneCovered');
+            const notCoveredResult = document.getElementById('zoneNotCovered');
+            
+            // Hardcoded covered areas based on specification
+            const coveredZones = ['lekki', 'victoria island', 'vi', 'ikoyi', 'surulere', 'yaba', 'ikeja', 'lekki phase 1'];
+            
+            // Simple inclusion check
+            const isCovered = coveredZones.some(zone => inputValue.includes(zone));
+
+            // Reset displays
+            coveredResult.style.display = 'none';
+            notCoveredResult.style.display = 'none';
+            
+            // Force reflow for animation reset
+            void coveredResult.offsetWidth; 
+            void notCoveredResult.offsetWidth;
+
+            if (isCovered) {
+                coveredResult.style.display = 'block';
+            } else {
+                notCoveredResult.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
