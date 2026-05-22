@@ -129,7 +129,8 @@
     }
 
     .btn-outline {
-      border: 2px solid var(--border);
+      border: 2px solid transparent; 
+      border-color: var(--primary);
       background: transparent;
       color: var(--dark);
     }
@@ -200,14 +201,26 @@
       color: var(--dark);
     }
 
-    /* PREMIUM HERO SECTION */
-    .hero {
-      padding-top: 160px;
-      padding-bottom: 80px;
-      position: relative;
-      overflow: visible;
-      background: linear-gradient(180deg, var(--mint) 0%, var(--bg) 100%);
-    }
+    
+    /* PREMIUM HERO SECTION WITH REPEATING TEXTURE */
+.hero {
+  padding-top: 160px;
+  padding-bottom: 80px;
+  position: relative;
+  overflow: visible;
+  
+  /* Texture Implementation */
+  background-color: var(--bg);
+  background-image: 
+    linear-gradient(180deg, rgba(204, 251, 241, 0.85) 0%, rgba(248, 250, 252, 1) 100%),
+    url('batthern.png'); 
+  
+  /* THE FIX: Tile the pattern instead of stretching it */
+  background-repeat: repeat;
+  background-size: 100px; /* Adjust this number (e.g., 80px or 120px) to make the grid squares larger or smaller */
+  background-position: top left;
+  background-blend-mode: multiply; /* 'multiply' usually works best for dark grid lines on a light background */
+}
 
     .hero-grid {
       display: grid;
@@ -227,7 +240,6 @@
       position: relative;
     }
     
-    /* Subtle underline accent for the brand color */
     .hero-text-content h1 span::after {
       content: '';
       position: absolute;
@@ -512,7 +524,7 @@
       margin-left: 8px;
     }
 
-    /* CATEGORIES (Updated to be full clickable cards) */
+    /* CATEGORIES */
     .category-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -547,6 +559,99 @@
 
     .category p {
       color: var(--muted);
+    }
+
+    /* BLOG / INSIGHTS SECTION */
+    .blog-section {
+      background: var(--bg);
+    }
+
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .blog-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: 0.3s;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .blog-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary);
+    }
+
+    .blog-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      background: var(--mint);
+    }
+
+    .blog-content {
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .blog-badge {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--primary);
+      background: var(--mint);
+      padding: 6px 14px;
+      border-radius: 999px;
+      align-self: flex-start;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .blog-title {
+      font-size: 1.35rem;
+      margin-bottom: 12px;
+      line-height: 1.4;
+      font-family: var(--font-head);
+      color: var(--dark);
+    }
+
+    .blog-excerpt {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+      flex-grow: 1;
+    }
+
+    .blog-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .read-more {
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+    }
+
+    .read-more:hover {
+      gap: 10px;
     }
 
     /* DIASPORA */
@@ -655,7 +760,8 @@
       .package-grid,
       .steps,
       .category-grid,
-      .trust-grid {
+      .trust-grid,
+      .blog-grid {
         grid-template-columns: 1fr 1fr;
       }
       .footer-grid {
@@ -693,6 +799,7 @@
       .steps,
       .category-grid,
       .trust-grid,
+      .blog-grid,
       .footer-grid {
         grid-template-columns: 1fr;
       }
@@ -757,6 +864,7 @@
       <a href="tests.html">Tests</a>
       <a href="packages.html">Packages</a>
       <a href="for-doctors.html">Doctors</a>
+      <a href="blog.html">Blog</a>
       <a href="auth-login.html">Sign in</a>
       <a href="auth-register.html" class="btn btn-primary">Book Test</a>
     </nav>
@@ -988,6 +1096,56 @@
   </div>
 </section>
 
+<section class="blog-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Health Insights</h2>
+      <p class="section-desc">Medical education, wellness tips, and diagnostic updates from our clinical team.</p>
+    </div>
+    
+    <div class="blog-grid">
+      <a href="blog.html" class="blog-card">
+        <img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Doctor reviewing lab results" class="blog-img">
+        <div class="blog-content">
+          <span class="blog-badge">Wellness</span>
+          <h3 class="blog-title">Why Your Annual Fasting Blood Sugar Test Matters</h3>
+          <p class="blog-excerpt">Understanding the difference between prediabetes and normal levels, and how early detection changes everything.</p>
+          <div class="blog-meta">
+            <span>May 18, 2026</span>
+            <span class="read-more">Read article <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <a href="blog.html" class="blog-card">
+        <img src="https://images.unsplash.com/photo-1584362917165-526a968579e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Diet and Heart Health" class="blog-img">
+        <div class="blog-content">
+          <span class="blog-badge">Heart Health</span>
+          <h3 class="blog-title">Decoding Your Lipid Profile: HDL vs LDL</h3>
+          <p class="blog-excerpt">Cholesterol isn't entirely bad. Learn how to interpret your latest lipid panel and when to consult your physician.</p>
+          <div class="blog-meta">
+            <span>May 12, 2026</span>
+            <span class="read-more">Read article <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></span>
+          </div>
+        </div>
+      </a>
+
+      <a href="blog.html" class="blog-card">
+        <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Telemedicine concept" class="blog-img">
+        <div class="blog-content">
+          <span class="blog-badge">Company News</span>
+          <h3 class="blog-title">LabRunr Expands Diagnostic Network Across Mainland</h3>
+          <p class="blog-excerpt">We are bringing our home collection services and accredited lab partners to Surulere, Ikeja, and beyond.</p>
+          <div class="blog-meta">
+            <span>April 28, 2026</span>
+            <span class="read-more">Read article <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
 <section>
   <div class="container">
     <div class="diaspora-box">
@@ -1012,7 +1170,12 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <div class="logo" style="color: white; font-size: 1.5rem;">LabRunr</div>
+        <div class="logo" style="color: white; font-size: 1.5rem;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 22H22L12 2ZM12 7.5L16.5 16H7.5L12 7.5Z"/>
+          </svg>
+          LabRunr
+        </div>
         <p>Building Africa's modern diagnostic infrastructure.</p>
       </div>
       <div>
@@ -1034,8 +1197,9 @@
       <div>
         <h4>Company</h4>
         <ul>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Privacy</a></li>
+          <li><a href="blog.html">Blog & Insights</a></li>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Privacy Policy</a></li>
           <li><a href="#">Support</a></li>
         </ul>
       </div>
